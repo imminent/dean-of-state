@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+
+dependencies {
+  compile 'javax.inject:javax.inject:1'
+  compile 'io.reactivex:rxjava:1.0.0-rc.3'
+  compile 'com.google.code.findbugs:findbugs:3.0.0'
+}
+
+// Sets up find bugs plugin
+findbugs {
+  includeFilter = file("$project.projectDir/config/findbugs/includeFilter.xml")
+  excludeFilter = file("$project.projectDir/config/findbugs/excludeFilter.xml")
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+// Sets up pmd plugin
+pmd {
+  ruleSets = []
+  ruleSetFiles = files("$project.projectDir/config/pmd/ruleset.xml")
+}
+
+apply from: '../maven_push.gradle'
